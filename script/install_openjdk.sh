@@ -6,7 +6,7 @@ set -euo pipefail
 # https://jdk.java.net/archive/; the download links have a unique hash, so
 # please visit the URL above to obtain the relevant download link
 
-url=https://download.java.net/java/GA/jdk20/bdc68b4b9cbc4ebcb30745c85038d91d/36/GPL/openjdk-20_linux-x64_bin.tar.gz
+url=https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-x64_bin.tar.gz
 
 root_dir=$(realpath $(dirname $0)/..)
 bin_dir=${root_dir}/bin
@@ -17,8 +17,14 @@ fi
 
 tarball=$(basename ${url})
 # extracted=${tarball%%.*}
-extracted=jdk-20
+extracted=jdk-19.0.2
 
+if [[ -d ${bin_dir}/${extracted} ]]; then
+   >&2 echo ${bin_dir}/${extracted} already exists
+   exit 1
+fi
+
+cd ${root_dir}
 if [[ -e ${tarball} ]]; then
    >&2 echo ${tarball} already exists
    exit 1
