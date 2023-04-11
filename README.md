@@ -57,3 +57,84 @@ nextflow run hello
 # 
 # Hola world!
 ```
+
+## Nextflow tutorial
+
+[Introduction to Bioinformatics workflows with Nextflow and
+nf-core](https://carpentries-incubator.github.io/workflows-nextflow/index.html) lesson objectives:
+
+1. The learner will understand the fundamental components of a Nextflow script,
+   including channels, processes and operators.
+2. The learner will write a multi-step workflow script to align, quantify, and
+   perform QC on an RNA-Seq data in Nextflow DSL.
+3. The learner will be able to write a Nextflow configuration file to alter the
+   computational resources allocated to a process.
+4. The learner will use nf-core to run a community curated pipeline, on an
+   RNA-Seq dataset.
+
+Nextflow is a workflow management system that combines a runtime environment,
+software that is designed to run other software, and a programming domain
+specific language (DSL) that eases the writing of computational pipelines.
+
+Nextflow is built around the idea that Linux is the _lingua franca_ of data
+science. Nextflow follows Linux's "small pieces loosely joined" philosophy, in
+which many simple but powerful command-line and scripting tools, when chained
+together, facilitate more complex data manipulations.
+
+Nextflow extends this approach, adding the ability to define complex program
+interactions and an accessible (high-level) parallel computational environment
+based on the dataflow programming model, whereby `processes` are connected via
+their `outputs` and `inputs` to other `processes`, and run as soon as they
+receive an input.
+
+The Nextflow scripting language is an extension of the Groovy programming
+language, which in turn is a superset of the Java programming language. Groovy
+simplifies the writing of code and is more approachable than Java; see Groovy's
+[semantics](https://groovy-lang.org/semantics.html).
+
+Nextflow (version > 20.07.1) provides a revised syntax to the original DSL,
+known as DSL2. This feature is enabled by the following directive at the
+beginning of a workflow script:
+
+    nextflow.enable.dsl=2
+
+### Processes, channels, and workflows
+
+Nextflow workflows have three main parts:
+
+1. Processes - describe a task to be run and can be written in any scripting
+	 language that can be executed on Linux (e.g. Bash, Perl, Python, etc.). They
+   define inputs and outputs for a task. Processes spawn a task for each complete
+   input set and each task is executed independently and cannot interact with
+	 another task. The only way data can be passed between process tasks is via
+   asynchronous queues, called channels.
+2. Channels - channels are used to manipulate the flow of data from one process
+   to the next.
+3. Workflows - this section is used to explicitly define the interaction
+   between processes and the pipeline execution flow.
+
+![Nextflow process flow diagram](img/channel-process_fqc.png)
+
+In the example above we have a `samples` channel containing three input FASTQ
+files. The `fastqc` process takes the `samples` channel as input and since the
+channel has three elements, three independent instances (tasks) of that process
+are run in parallel. Each task generates an output, which is passed to the
+`out_ch` channel and is used as input for the `multiqc` process.
+
+While a `process` defines what command or script has to be executed, the
+`executor` determines how that script will be run in the target system. The
+default is to execute processes on the local computer, which is useful for
+pipeline development, testing, and small scale workflows. For large scale
+computational pipelines, a High Performance Cluster (HPC) or Cloud platform is
+desired.
+
+![Nextflow executors](img/executor.png)
+
+Nextflow provides a separation between the pipeline's functional logic and the
+underlying execution platform. This makes it easy to execute a pipeline on
+various platforms without modifying the workflow and is achieved by defining
+the target execution platform in a configuration file.
+
+Nextflow provides [native
+support](https://www.nextflow.io/docs/latest/executor.html) for major batch
+schedulers and cloud platforms including SGE, SLURM, AWS, and Kubernetes.
