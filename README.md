@@ -15,9 +15,9 @@ scientific workflows using software containers.
 script/install_openjdk.sh
 
 bin/jdk-19.0.2/bin/java -version
-openjdk version "19.0.2" 2023-01-17
-OpenJDK Runtime Environment (build 19.0.2+7-44)
-OpenJDK 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
+# openjdk version "19.0.2" 2023-01-17
+# OpenJDK Runtime Environment (build 19.0.2+7-44)
+# OpenJDK 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
 ```
 
 2. Install Nextflow.
@@ -138,3 +138,16 @@ the target execution platform in a configuration file.
 Nextflow provides [native
 support](https://www.nextflow.io/docs/latest/executor.html) for major batch
 schedulers and cloud platforms including SGE, SLURM, AWS, and Kubernetes.
+
+### First script
+
+The `wc.nf` script counts the number of lines in a FASTQ file.
+
+```console
+nextflow run script/wc.nf
+# N E X T F L O W  ~  version 23.04.0
+# Launching `script/wc.nf` [stoic_easley] DSL2 - revision: 9cef523068
+# executor >  local (1)
+# [6b/286e0b] process > NUM_LINES (1) [100%] 1 of 1 ✔
+# ref1_1.fq.gz 58708
+```

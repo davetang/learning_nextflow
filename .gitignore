@@ -1,5 +1,5 @@
 *.swp
-.nextflow.log
+.nextflow.log*
 .nextflow/
 bin/
 work/
