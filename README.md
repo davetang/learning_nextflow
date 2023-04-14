@@ -181,3 +181,35 @@ nextflow run script/wc.nf
 # [6b/286e0b] process > NUM_LINES (1) [100%] 1 of 1 ✔
 # ref1_1.fq.gz 58708
 ```
+
+## Sarek
+
+[nf-core/sarek](https://nf-co.re/sarek) is a Nextflow workflow for calling
+variants on whole genome, exome, or targeted sequencing data. Following the
+[Quick Start](https://nf-co.re/sarek#quick-start) guide:
+
+1. [Install using Mamba](#installation).
+2. Docker installed.
+3. Download and test pipeline:
+
+```console
+time nextflow run nf-core/sarek -profile test,docker --outdir sarek_test
+# snipped
+# -[nf-core/sarek] Pipeline completed successfully-
+# Completed at: 14-Apr-2023 09:48:56
+# Duration    : 9m 18s
+# CPU hours   : 0.1
+# Succeeded   : 26
+#
+# real    9m37.830s
+# user    1m51.006s
+# sys     0m14.591s
+```
+
+4. Run your own analysis
+
+```console
+nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
+```
+
+See the [usage page](https://nf-co.re/sarek/usage) for more information.
