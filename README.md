@@ -3,6 +3,36 @@
 [Nextflow](https://www.nextflow.io/) enables scalable and reproducible
 scientific workflows using software containers.
 
+## Installation
+
+[Conda](https://docs.conda.io/en/latest/) is an easy way of installing
+[Nextflow](https://anaconda.org/bioconda/nextflow). I would recommend using
+[Mamba](https://github.com/mamba-org/mamba), which is a faster version of
+Conda, to install Nextflow.
+
+```console
+mamba create -y \
+   -n nextflow \
+   -c Bioconda -c conda-forge \
+   nextflow
+
+conda activate nextflow
+
+nextflow -version
+#
+#       N E X T F L O W
+#       version 22.10.6 build 5843
+#       created 23-01-2023 23:20 UTC (24-01-2023 08:20 JDT)
+#       cite doi:10.1038/nbt.3820
+#       http://nextflow.io
+#
+
+java -version
+# openjdk version "17.0.3-internal" 2022-04-19
+# OpenJDK Runtime Environment (build 17.0.3-internal+0-adhoc..src)
+# OpenJDK 64-Bit Server VM (build 17.0.3-internal+0-adhoc..src, mixed mode, sharing)
+```
+
 ## Set up for testing purposes only
 
 1. Java 11 or later is required (up to 19 is supported);
