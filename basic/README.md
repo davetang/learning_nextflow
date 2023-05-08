@@ -1,3 +1,14 @@
+Table of Contents
+=================
+
+* [README](#readme)
+   * [Learning outcomes](#learning-outcomes)
+   * [Environment setup](#environment-setup)
+   * [Basic concepts](#basic-concepts)
+   * [Hello](#hello)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 # README
 
 Check out the [Nextflow community training
@@ -168,3 +179,38 @@ nextflow run training/nf-training/hello.nf -ansi-log false
 
 Lastly, `CONVERTTOUPPER` is executed in parallel, so the output can differ
 based on which task is executed first.
+
+Nextflow keeps track of all the processes executed in a workflow. If a script
+is modified, only the processes that are changed will be re-executed. The
+execution of the processes that are not changed will be skipped and the cached
+result will be used instead. Include the `-resume` option to enable this
+behaviour.
+
+```console
+nextflow run training/nf-training/hello.nf -resume
+N E X T F L O W  ~  version 22.10.6
+Launching `training/nf-training/hello.nf` [astonishing_goldstine] DSL2 - revision: 197a0e289a
+[ac/786da9] process > SPLITLETTERS (1)   [100%] 1 of 1, cached: 1 ✔
+[bc/908e8d] process > CONVERTTOUPPER (1) [100%] 2 of 2, cached: 2 ✔
+WORLD!
+HELLO
+```
+
+Since nothing was changed, the cached result was used for both processes. The
+workflow results are cached by default in `$PWD/work` and can take up a lot of
+disk space.
+
+Workflow parameters are declared by prepending the prefix `params` to a
+variable name, separated by a period. Their value can be specified on the
+command line by prefixing the parameter name with two hyphens. For example:
+
+```console
+nextflow run training/nf-training/hello.nf --greeting 'Bonjour le monde!'
+# Launching `training/nf-training/hello.nf` [suspicious_meninsky] DSL2 - revision: 197a0e289a
+# executor >  local (4)
+# [6d/0bfe0a] process > SPLITLETTERS (1)   [100%] 1 of 1 ✔
+# [19/300017] process > CONVERTTOUPPER (3) [100%] 3 of 3 ✔
+# R LE M
+# BONJOU
+# ONDE!
+```
