@@ -91,3 +91,80 @@ Nextflow implements a declarative DSL that serves as an extension of a
 general-purpose programming language. Nextflow scripting is an extension of
 Groovy, which is a super-set of Java. Groovy simplifies the writing of code and
 is more approachable than Java.
+
+## Hello
+
+The `hello.nf` script takes an input string (a parameter called
+`params.greeting`) and splits it into chunks of six characters in the first
+process. The second process then converts the characters to upper case.
+
+The use of the operator `.flatten()` in the workflow block is for splitting the
+two files into two separate items to be put through the next process (or else
+they would be treated as a single element).
+
+```nextflow
+#!/usr/bin/env nextflow
+
+params.greeting = 'Hello world!'
+greeting_ch = Channel.of(params.greeting)
+
+process SPLITLETTERS {
+    input:
+    val x
+
+    output:
+    path 'chunk_*'
+
+    """
+    printf '$x' | split -b 6 - chunk_
+    """
+}
+
+process CONVERTTOUPPER {
+    input:
+    path y
+
+    output:
+    stdout
+
+    """
+    cat $y | tr '[a-z]' '[A-Z]' 
+    """
+}
+
+workflow {
+    letters_ch = SPLITLETTERS(greeting_ch)
+    results_ch = CONVERTTOUPPER(letters_ch.flatten())
+    results_ch.view{ it }
+}
+```
+
+Execute the script.
+
+```console
+nextflow run training/nf-training/hello.nf
+# N E X T F L O W  ~  version 22.10.6
+# Launching `training/nf-training/hello.nf` [mighty_mahavira] DSL2 - revision: 197a0e289a
+# executor >  local (3)
+# [ac/786da9] process > SPLITLETTERS (1)   [100%] 1 of 1 ✔
+# [bc/908e8d] process > CONVERTTOUPPER (1) [100%] 2 of 2 ✔
+# WORLD!
+# HELLO
+```
+
+Note that `CONVERTTOUPPER` is executed twice because of `.flatten()`. The
+hexadecimal numbers `ac/786da9` and `bc/908e8d` identify the unique process
+execution, which is called a `task`; they are also the names of the directories
+where each task was executed.
+
+`CONVERTTOUPPER` actually produced two different work directories but only one
+is displayed in the log because the log is dynamically refreshed and only the
+last directory is shown. Use the following to output all relevant paths to the
+screen:
+
+```console
+nextflow run training/nf-training/hello.nf -ansi-log false
+```
+
+Lastly, `CONVERTTOUPPER` is executed in parallel, so the output can differ
+based on which task is executed first.
