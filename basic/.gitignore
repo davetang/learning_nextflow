@@ -1,2 +1,7 @@
 training
 work
+dag.dot
+report-*.html
+results
+timeline-*.html
+trace-*.txt
