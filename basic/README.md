@@ -6,8 +6,10 @@ Table of Contents
    * [Environment setup](#environment-setup)
    * [Basic concepts](#basic-concepts)
    * [Hello](#hello)
+   * [Channels](#channels)
+      * [Channel factories](#channel-factories)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 
 # README
 
@@ -214,3 +216,73 @@ nextflow run training/nf-training/hello.nf --greeting 'Bonjour le monde!'
 # BONJOU
 # ONDE!
 ```
+
+## Channels
+
+Channels are used to logically connect tasks to each other or to implement
+functional style data transformations. Nextflow distinguishes two different
+kinds of channels:
+
+1. Queue channels
+2. Value channels
+
+A queue channel is an asynchronous unidirectional FIFO queue that connects two
+processes or operators.
+
+* Asynchronous means that operations are non-blocking.
+* Unidirectional means that data flows from a producer to a consumer.
+* FIFO (First In, First Out) means that the data is guaranteed to be delivered
+  in the same order as it is produced.
+
+A queue channel is implicitly created by process output definitions or using
+channel factories such as `Channel.of` or `Channel.fromPath`.
+
+```nextflow
+ch = Channel.of(1, 2, 3)
+println(ch) 
+ch.view() 
+```
+
+Run.
+
+```console
+nextflow run channel_of.nf
+# N E X T F L O W  ~  version 22.10.6
+# Launching `channel_of.nf` [confident_varahamihira] DSL2 - revision: 6d727ba3c3
+# DataflowBroadcast around DataflowStream[?]
+# 1
+# 2
+# 3
+```
+
+A value channel (a.k.a. singleton channel) by definition is bound to a single
+value and it can be read unlimited times without consuming its contents. A
+`value` channel is created using the `value` channel factory or by operators
+returning a single value, such as `first`, `last`, `collect`, `count`, `min`,
+`max`, `reduce`, and `sum`.
+
+### Channel factories
+
+The following are Nextflow commands for creating channels that have implicit
+expected inputs and functions.
+
+* The `value` channel factory is used to create a value channel.
+* The factory `Channel.of` allows the creation of a queue channel with the
+  values specified as arguments.
+* The `Channel.fromList` channel factory creates a channel emitting the
+  elements in a list.
+* The `fromPath` channel factory creates a queue channel emitting one or more
+  files matching a specified glob.
+* The `fromFilePairs` channel factory creates a channel emitting the file pairs
+  matching a glob pattern.
+* The `Channel.fromSRA` channel factory makes it possible to query the SRA and
+  returns a channel emitting the FASTQ files matching the specified selection
+	criteria. This requires an API key obtained by logging into your NCBI
+	account. Use [secrets](https://www.nextflow.io/docs/latest/secrets.html) to
+  store and use your key.
+* The `splitText` operator allows you to split multi-line strings or text file
+  items.
+* The `splitCsv` operator allows you to parse text items in CSV (and TSV)
+  files. For TSV files, use `sep: '\t'`.
+
+It is also possible to parse JSON and YAML files using external libraries.
