@@ -8,6 +8,12 @@ Table of Contents
    * [Hello](#hello)
    * [Channels](#channels)
       * [Channel factories](#channel-factories)
+   * [Processes](#processes)
+      * [Script](#script)
+      * [Inputs](#inputs)
+      * [Outputs](#outputs)
+      * [When](#when)
+      * [Directives](#directives)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 
@@ -286,3 +292,399 @@ expected inputs and functions.
   files. For TSV files, use `sep: '\t'`.
 
 It is also possible to parse JSON and YAML files using external libraries.
+
+## Processes
+
+In Nextflow, a `process` is the basic computing primitive to execute foreign
+functions. The `process` definition starts with the keyword `process`, followed
+by the process name and the process body in a curly bracket block. The
+`process` name is commonly written in upper case by convention. A basic
+`process`, only using the `script` definition block is shown below.
+
+```nextflow
+process SAYHELLO {
+    script:
+    """
+    echo 'Hello world!'
+    """
+}
+```
+
+The process body can contain up to five definition blocks:
+
+1. `Directives` are initial declarations that define optional settings.
+2. `Input` defines the expected input channel(s).
+3. `Output` defines the expected output channel(s).
+4. `When` is an optional clause statement to allow conditional processes
+5. `Script` is a string statement that defines the command to be executed by the process' task.
+
+```nextflow
+process < name > {
+    [ directives ] 
+
+    input: 
+    < process inputs >
+
+    output: 
+    < process outputs >
+
+    when: 
+    < condition >
+
+    [script|shell|exec]: 
+    """
+    < user script to be executed >
+    """
+}
+```
+
+### Script
+
+The `script` block is a string statement that defines the command to be
+executed by the process. A process can execute only one `script` block and it
+must be the last statement when the process contains `input` and `output`
+declarations.
+
+The `script` block can be a single of a multi-line string. By default the
+`process` command is interpreted as a Bash script. However any other scripting
+language can be used by specifying the interpreter in the Shebang.
+
+Script parameters (`params`) can be defined in the Nextflow script using
+variable values.
+
+```nextflow
+params.data = 'World'
+
+process FOO {
+    script:
+    """
+    echo Hello $params.data
+    """
+}
+
+workflow {
+    FOO()
+}
+```
+
+Of note is that since Nextflow uses the same Bash syntax for variable
+substitutions in strings, Bash variables need to be escaped using `\`.
+Alternatives include using a script string delimited by single-quote characters
+but Nextflow variables are not interpolated and using a `shell` statement
+instead of `script` and use `!{}` for Nextflow variables.
+
+The process script can run steps conditionally using an `if` statement or any
+other expression for evaluating a string value.
+
+```nextflow
+params.compress = 'gzip'
+params.file2compress = "$baseDir/data/ggal/transcriptome.fa"
+
+process FOO {
+    input:
+    path file
+
+    script:
+    if (params.compress == 'gzip')
+        """
+        gzip -c $file > ${file}.gz
+        """
+    else if (params.compress == 'bzip2')
+        """
+        bzip2 -c $file > ${file}.bz2
+        """
+    else
+        throw new IllegalArgumentException("Unknown compressor $params.compress")
+}
+
+workflow {
+    FOO(params.file2compress)
+}
+```
+
+### Inputs
+
+Nextflow process instances (tasks) are isolated from each other but communicate
+with each other through channels. Inputs implicitly determine the dependencies
+and the parallel execution of the process. The process execution starts each
+time new data is available from the input channel.
+
+The `input` block defines the names and qualifiers of variables that refer to
+channel elements. You can only define one `input` block at a time and it must
+contain one or more input declarations.
+
+```nextflow
+input:
+<input qualifier> <input name>
+```
+
+The `val` qualifier allows you to receive data of any type as input.
+
+```nextflow
+num = Channel.of(1, 2, 3)
+
+process BASICEXAMPLE {
+    debug true
+
+    input:
+    val x
+
+    script:
+    """
+    echo process job $x
+    """
+}
+
+workflow {
+    myrun = BASICEXAMPLE(num)
+}
+```
+
+The `path` qualifier allows the handling of file values in the process
+execution context. This means that Next will stage it in the process execution
+directory and it can be accessed in the script by using the name specified in
+the input declaration.
+
+```nextflow
+reads = Channel.fromPath('data/ggal/*.fq')
+
+process FOO {
+    debug true
+
+    input:
+    path sample
+
+    script:
+    """
+    ls -lh $sample
+    """
+}
+
+workflow {
+    FOO(reads.collect())
+}
+```
+
+A key feature of processes is the ability to handle inputs from multiple
+channels. Use a `value` channel if the channels have different number of data.
+This is because `value` channels can be consumed multiple times and do not
+affect process termination.
+
+```nextflow
+input1 = Channel.value(1)
+input2 = Channel.of('a', 'b', 'c')
+
+process BAR {
+    debug true
+
+    input:
+    val x
+    val y
+
+    script:
+    """
+    echo $x and $y
+    """
+}
+
+workflow {
+    BAR(input1, input2)
+}
+```
+
+The `each` qualifier allows you to repeat the execution of a process for each
+item in a collection every time new data is received.
+
+```nextflow
+sequences = Channel.fromPath('data/prots/*.tfa')
+methods = ['regular', 'espresso', 'psicoffee']
+
+process ALIGNSEQUENCES {
+    debug true
+
+    input:
+    path seq
+    each mode
+
+    script:
+    """
+    echo t_coffee -in $seq -mode $mode
+    """
+}
+
+workflow {
+    ALIGNSEQUENCES(sequences, methods)
+}
+```
+
+### Outputs
+
+The `output` declaration block defines the channels used by the process to send
+out the results. Only one `output` block, which can contain one or more output
+declaration, can be defined. The `output` block has the following syntax:
+
+```nextflow
+output:
+<output qualifier> <output name>, emit: <output channel>
+```
+
+When an output file name contains a wildcard character (`*` or `?`) it is
+interpreted as a glob path matcher and allows multiple files to be captured
+into a list object.
+
+```nextflow
+process SPLITLETTERS {
+    output:
+    path 'chunk_*'
+
+    script:
+    """
+    printf 'Hola' | split -b 1 - chunk_
+    """
+}
+
+workflow {
+    letters = SPLITLETTERS()
+    letters
+        .flatMap()
+        .view { "File: ${it.name} => ${it.text}" }
+}
+```
+
+Of note on glob patterns:
+
+* Input files are not included in the list of possible matches
+* Glob pattern matches both files and directory paths
+* When a two star pattern `**` is used to recourse across directories, only
+  file paths are matched.
+
+When an output file name needs to be expressed dynamically, it is possible to
+define it using a dynamic string that references values defined in the input
+declaration block or in the script context.
+
+```nextflow
+species = ['cat', 'dog', 'sloth']
+sequences = ['AGATAG', 'ATGCTCT', 'ATCCCAA']
+
+Channel
+    .fromList(species)
+    .set { species_ch }
+
+process ALIGN {
+    input:
+    val x
+    val seq
+
+    output:
+    path "${x}.aln"
+
+    script:
+    """
+    echo align -in $seq > ${x}.aln
+    """
+}
+
+workflow {
+    genomes = ALIGN(species_ch, sequences)
+    genomes.view()
+}
+```
+
+Output (and input) declarations can be tuples if declared with a `tuple`
+qualifier. This allows composite outputs (and inputs).
+
+### When
+
+The `when` declaration can be used for setting conditional behaviour.
+
+```nextflow
+params.dbtype = 'nr'
+params.prot = 'data/prots/*.tfa'
+proteins = Channel.fromPath(params.prot)
+
+process FIND {
+    debug true
+
+    input:
+    path fasta
+    val type
+
+    when:
+    fasta.name =~ /^BB11.*/ && type == 'nr'
+
+    script:
+    """
+    echo blastp -query $fasta -db nr
+    """
+}
+
+workflow {
+    result = FIND(proteins, params.dbtype)
+}
+```
+
+### Directives
+
+Directive declarations allow the definition of optional settings that affect
+the execution of the current process without affecting the semantic of the task
+itself. They must be entered at the top of the process body, before any other
+declaration blocks.
+
+Directives are commonly used to define the amount of computing resources to be
+used or other meta directives that allow the definition of extra configuration
+of logging information.
+
+```nextflow
+process FOO {
+    cpus 2
+    memory 1.GB
+    container 'image/name'
+
+    script:
+    """
+    echo your_command --this --that
+    """
+}
+```
+
+The `publishDir` directive is useful for storing workflow result files.
+
+```nextflow
+params.outdir = 'my-results'
+params.prot = 'data/prots/*.tfa'
+proteins = Channel.fromPath(params.prot)
+
+
+process BLASTSEQ {
+    publishDir "$params.outdir/bam_files", mode: 'copy'
+
+    input:
+    path fasta
+
+    output:
+    path ('*.txt')
+
+    script:
+    """
+    echo blastp $fasta > ${fasta}_result.txt
+    """
+}
+
+workflow {
+    blast_ch = BLASTSEQ(proteins)
+    blast_ch.view()
+}
+```
+
+Multiple `publishDir` directives can be used to keep different outputs in
+separate directories.
+
+```nextflow
+// snipped
+process FOO {
+    publishDir "$params.outdir/$sampleId/", pattern: '*.fq'
+    publishDir "$params.outdir/$sampleId/counts", pattern: "*_counts.txt"
+    publishDir "$params.outdir/$sampleId/outlooks", pattern: '*_outlook.txt'
+
+// snipped
+```
