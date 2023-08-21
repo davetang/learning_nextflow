@@ -63,6 +63,10 @@ re-executed. No need to setup call caching like for WDL/Cromwell; just include
 nextflow run hello.nf -resume
 ```
 
+Sub-workflows are [also supported in
+Nextflow](https://carpentries-incubator.github.io/workflows-nextflow/11-subworkflows/index.html);
+use `include` (`import` in WDL).
+
 ## Installation
 
 [Conda](https://docs.conda.io/en/latest/) is an easy way of installing
