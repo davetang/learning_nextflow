@@ -3,6 +3,66 @@
 [Nextflow](https://www.nextflow.io/) enables scalable and reproducible
 scientific workflows using software containers.
 
+## TL;DR
+
+For those coming from WDL (like myself), here's a summary.
+
+A Nextflow workflow is made by joining together different
+[processes](https://www.nextflow.io/docs/latest/process.html) (WDL tasks).
+
+```nf
+process < name > {
+
+  [ directives ]
+
+  input:
+    < process inputs >
+
+  output:
+    < process outputs >
+
+  when:
+    < condition >
+
+  [script|shell|exec]:
+    < user script to be executed >
+
+}
+```
+
+The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
+allows the definition of sub-workflow components that enclose the invocation of
+one or more processes and operators.
+
+```nf
+workflow my_pipeline {
+    take: data
+    main:
+        foo(data)
+        bar(foo.out)
+}
+```
+
+Processes are executed independently and are isolated from each other; they
+communicate with each other through `channels`. Any `process` can define one or
+more `channels` as an `input` and `output`.
+
+Use a YAML (JSON in WDL) file to specify parameters. Parameters used with
+`nextflow run` are referenced using `params.argv` in the Nextflow script.
+
+```console
+nextflow run kallisto.nf -params-file kallisto.yaml --samples <input_file>
+```
+
+Nextflow keeps track of all the processes executed in your workflow. If you
+modify some parts of your script, only the processes that are changed will be
+re-executed. No need to setup call caching like for WDL/Cromwell; just include
+`-resume`.
+
+```console
+nextflow run hello.nf -resume
+```
+
 ## Installation
 
 [Conda](https://docs.conda.io/en/latest/) is an easy way of installing
