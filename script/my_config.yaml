@@ -1,0 +1,6 @@
+process {
+  withLabel: many_cpus {
+    cpus = 8
+    memory = 8.GB
+  }
+}
