@@ -47,6 +47,22 @@ Processes are executed independently and are isolated from each other; they
 communicate with each other through `channels`. Any `process` can define one or
 more `channels` as an `input` and `output`.
 
+Output of a process is accessed using the `out` channel, instead of using the
+defined output in WDL.
+
+```nf
+workflow {
+    STRING_TO_FILE(params.string)
+    CAT_FILE(STRING_TO_FILE.out)
+    CAT_FILE.out.view()
+}
+```
+
+Pipeline results are also stored in directories with random names (hashes) but
+process results are not named by the process name (WDL task outputs are stored
+in directories named with `call-task_name`). `STDOUT` and `STDERR` are also
+saved but as hidden files in Nextflow.
+
 Use a YAML (JSON in WDL) file to specify parameters. Parameters used with
 `nextflow run` are referenced using `params.argv` in the Nextflow script.
 
@@ -57,7 +73,8 @@ nextflow run kallisto.nf -params-file kallisto.yaml --samples <input_file>
 Nextflow keeps track of all the processes executed in your workflow. If you
 modify some parts of your script, only the processes that are changed will be
 re-executed. No need to setup call caching like for WDL/Cromwell; just include
-`-resume`.
+a `cache` directive in the process to store the process results to a local
+cache and launch the pipeline with `-resume`.
 
 ```console
 nextflow run hello.nf -resume
