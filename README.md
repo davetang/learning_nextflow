@@ -82,7 +82,24 @@ nextflow run hello.nf -resume
 
 Sub-workflows are [also supported in
 Nextflow](https://carpentries-incubator.github.io/workflows-nextflow/11-subworkflows/index.html);
-use `include` (`import` in WDL).
+use `include` (`import` in WDL). Give a (sub-)workflow a name and then you can
+include it in another script.
+
+```nf
+# sub_wf.nf
+workflow SUB_WORKFLOW {
+    STRING_TO_FILE(params.string)
+    CAT_FILE(STRING_TO_FILE.out)
+    CAT_FILE.out.view()
+}
+
+# sub_wf_include.nf
+include {SUB_WORKFLOW} from './sub_wf.nf'
+
+workflow {
+    SUB_WORKFLOW()
+}
+```
 
 ## Installation
 
