@@ -101,6 +101,15 @@ workflow {
 }
 ```
 
+Use `-c my_config` to specify a [config
+file](https://www.nextflow.io/docs/latest/config.html) (`-o
+cromwell_options.txt` in Cromwell). As I understand from the [Nextflow
+configuration](https://training.nextflow.io/basic_training/config/) guide, the
+execution settings and workflow parameter settings can be stored into a single
+file. Though I think it's better separate the two; use the `-params-file`
+option to specify the file with the workflow parameters and `-c` to specify the
+file with the workflow execution parameters.
+
 ## Installation
 
 [Conda](https://docs.conda.io/en/latest/) is an easy way of installing
