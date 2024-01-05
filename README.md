@@ -112,10 +112,18 @@ file with the workflow execution parameters.
 
 ## Installation
 
-[Conda](https://docs.conda.io/en/latest/) is an easy way of installing
-[Nextflow](https://anaconda.org/bioconda/nextflow). I would recommend using
-[Mamba](https://github.com/mamba-org/mamba), which is a faster version of
-Conda, to install Nextflow.
+On Debian 11 install the Java Runtime Environment and simply download/run the
+install script.
+
+```console
+sudo apt install default-jre
+curl -fsSL get.nextflow.io | bash
+```
+
+Otherwise [Conda](https://docs.conda.io/en/latest/) is another way of
+installing [Nextflow](https://anaconda.org/bioconda/nextflow). I would
+recommend using [Mamba](https://github.com/mamba-org/mamba), which is a faster
+version of Conda, to install Nextflow.
 
 ```console
 mamba create -y \
