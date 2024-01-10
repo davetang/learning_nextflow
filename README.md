@@ -4,6 +4,7 @@
   - [TL;DR](#tldr)
   - [Installation](#installation)
   - [Quick demo](#quick-demo)
+    - [Run a project from GitHub](#run-a-project-from-github)
   - [Set up for testing purposes only](#set-up-for-testing-purposes-only)
   - [Nextflow tutorial](#nextflow-tutorial)
     - [Processes, channels, and workflows](#processes-channels-and-workflows)
@@ -176,6 +177,60 @@ nextflow run rnaseq-nf -with-docker -with-report -with-trace -with-timeline -wit
 ```
 
 ![](assets/quick_demo_dag.png)
+
+### Run a project from GitHub
+
+Nextflow allows the execution of a workflow project directly from a
+[GitHub](https://training.nextflow.io/basic_training/rnaseq_pipeline/#metrics-and-reports)
+repository (or similar services, e.g., BitBucket and GitLab).
+
+This simplifies the sharing and deployment of complex projects and tracking
+changes in a consistent manner.
+
+Use `info` to show the project information:
+
+```console
+nextflow info nextflow-io/rnaseq-nf
+```
+```
+ project name: nextflow-io/rnaseq-nf
+ repository  : https://github.com/nextflow-io/rnaseq-nf
+ local path  : /home/dtang/.nextflow/assets/nextflow-io/rnaseq-nf
+ main script : main.nf
+ description : Proof of concept of a RNA-seq pipeline implemented with Nextflow
+ author      : Paolo Di Tommaso
+ revisions   : 
+ * master (default)
+   dev
+   dsl2
+   enum
+   fix-schema
+   hybrid
+   json-schema-test
+   k8s-demo
+   programmatic-api
+   properties
+   sra-demo
+   wave
+   v1.0 [t]
+   v1.1 [t]
+   v1.2 [t]
+   v2.0 [t]
+   v2.1 [t]
+   v2.2 [t]
+   v2.3 [t]
+```
+
+Revision are defined by using Git tags or branches defined in the project
+repository. Tags enable precise control of the changes in your project files
+and dependencies over time.
+
+Nextflow allows the execution of a specific revision of your project by using
+the `-r` command line option.
+
+```console
+nextflow run nextflow-io/rnaseq-nf -r v2.3 -with-docker
+```
 
 ## Set up for testing purposes only
 
