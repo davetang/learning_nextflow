@@ -1,3 +1,15 @@
+## Table of Contents
+
+- [README](#readme)
+  - [TL;DR](#tldr)
+  - [Installation](#installation)
+  - [Quick demo](#quick-demo)
+  - [Set up for testing purposes only](#set-up-for-testing-purposes-only)
+  - [Nextflow tutorial](#nextflow-tutorial)
+    - [Processes, channels, and workflows](#processes-channels-and-workflows)
+    - [First script](#first-script)
+  - [Sarek](#sarek)
+
 # README
 
 [Nextflow](https://www.nextflow.io/) enables scalable and reproducible
@@ -147,6 +159,23 @@ java -version
 # OpenJDK Runtime Environment (build 17.0.3-internal+0-adhoc..src)
 # OpenJDK 64-Bit Server VM (build 17.0.3-internal+0-adhoc..src, mixed mode, sharing)
 ```
+
+## Quick demo
+
+Get [training material](https://training.nextflow.io/basic_training/setup/#training-material).
+
+```console
+git clone https://github.com/nextflow-io/training.git
+```
+
+Run a simple RNA-seq workflow with [metrics and reporting](https://training.nextflow.io/basic_training/rnaseq_pipeline/#metrics-and-reports).
+
+```console
+cd training/nf-training/
+nextflow run rnaseq-nf -with-docker -with-report -with-trace -with-timeline -with-dag dag.png
+```
+
+![](assets/quick_demo_dag.png)
 
 ## Set up for testing purposes only
 
