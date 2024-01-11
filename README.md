@@ -43,6 +43,14 @@ process < name > {
 }
 ```
 
+The [process](https://training.nextflow.io/basic_training/processes/) body can contain up to five definition blocks:
+
+1. **Directives** are initial declarations that define optional settings
+2. **Input** defines the expected input channel(s)
+3. **Output** defines the expected output channel(s)
+4. **When** is an optional clause statement to allow conditional processes
+5. **Script** is a string statement that defines the command to be executed by the process' task
+
 The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
 allows the definition of sub-workflow components that enclose the invocation of
 one or more processes and operators.
