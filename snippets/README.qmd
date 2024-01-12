@@ -18,3 +18,19 @@ engine: knitr
 #| label: nextflow_version
 nextflow -v
 ```
+
+## Hello
+
+Script.
+
+```{bash}
+#| label: hello.nf
+cat hello.nf
+```
+
+Run.
+
+```{bash}
+#| label: run_hello.nf
+nextflow hello.nf
+```
