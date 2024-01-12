@@ -76,6 +76,21 @@ process FOO {
 }
 ```
 
+To set the resource usage for all processes in the workflow script use the code
+below in a config file.
+
+```nf
+process {
+    cpus = 10
+    memory = 8.GB
+    container = 'biocontainers/bamtools:v2.4.0_cv3'
+}
+```
+
+Use a [process
+selector](https://www.nextflow.io/docs/latest/config.html#process-selectors) to
+apply configurations to specific processes or group of processes.
+
 The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
 allows the definition of sub-workflow components that enclose the invocation of
 one or more processes and operators.
