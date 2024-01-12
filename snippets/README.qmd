@@ -1,0 +1,20 @@
+---
+title: "Snippets"
+date: '`r format(Sys.Date(), "%Y-%m-%d")`'
+date-format: "YYYY-MM-DD"
+execute:
+  echo: true
+  cache: false
+format:
+   gfm:
+     html-math-method: webtex
+     toc: true
+engine: knitr
+---
+
+## Nextflow version
+
+```{bash}
+#| label: nextflow_version
+nextflow -v
+```
