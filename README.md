@@ -51,6 +51,31 @@ The [process](https://training.nextflow.io/basic_training/processes/) body can c
 4. **When** is an optional clause statement to allow conditional processes
 5. **Script** is a string statement that defines the command to be executed by the process' task
 
+Directives are like the `runtime` options in WDL but are declared inside the process.
+
+In WDL
+
+```wdl
+runtime {
+  cpu: 2
+}
+```
+
+In Nextflow.
+
+```nf
+process FOO {
+    cpus 2
+    memory 1.GB
+    container 'image/name'
+
+    script:
+    """
+    echo your_command --this --that
+    """
+}
+```
+
 The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
 allows the definition of sub-workflow components that enclose the invocation of
 one or more processes and operators.
