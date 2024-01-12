@@ -104,6 +104,32 @@ workflow {
 }
 ```
 
+However, the process output definition allows the use of the `emit` statement
+to define a named identifier that can be used to reference the channel in the
+external scope (but `out` still needs to be used as the prefix).
+
+```nf
+process CONVERTTOUPPER {
+    input:
+    path y
+
+    output:
+    stdout emit: upper
+
+    script:
+    """
+    cat $y | tr '[a-z]' '[A-Z]'
+    """
+}
+
+workflow {
+    greeting_ch = Channel.of(params.greeting)
+    SPLITLETTERS(greeting_ch)
+    CONVERTTOUPPER(SPLITLETTERS.out.flatten())
+    CONVERTTOUPPER.out.upper.view { it }
+}
+```
+
 Pipeline results are also stored in directories with random names (hashes) but
 process results are not named by the process name (WDL task outputs are stored
 in directories named with `call-task_name`). `STDOUT` and `STDERR` are also
