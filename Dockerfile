@@ -15,6 +15,7 @@ RUN apt-get clean all && \
 RUN mkdir /src && \
     cd /src && \
     curl -fsSL get.nextflow.io | bash && \
+    chmod 777 nextflow && \
     mv nextflow /usr/local/bin && \
     cd && rm -rf /src
 
