@@ -34,3 +34,19 @@ Run.
 #| label: run_hello.nf
 nextflow hello.nf
 ```
+
+## When
+
+The [when](https://training.nextflow.io/basic_training/processes/#when) declaration allows you to define a condition that must be verified in order to execute the process. This can be any expression that evaluates a Boolean value.
+
+```{bash}
+#| label: when.nf
+cat when.nf
+```
+
+Run.
+
+```{bash}
+#| label: run_when.nf
+nextflow when.nf
+```
