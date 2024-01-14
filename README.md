@@ -91,6 +91,54 @@ Use a [process
 selector](https://www.nextflow.io/docs/latest/config.html#process-selectors) to
 apply configurations to specific processes or group of processes.
 
+[Configure process by name](https://training.nextflow.io/basic_training/executors/#configure-process-by-name).
+
+```nf
+process {
+    executor = 'slurm'
+    queue = 'short'
+    memory = '10 GB'
+    time = '30 min'
+    cpus = 4
+
+    withName: PROCESSNAME {
+        cpus = 2
+        memory = '20 GB'
+        queue = 'short'
+    }
+}
+```
+
+[Configure process by label](https://training.nextflow.io/basic_training/executors/#configure-process-by-labels).
+
+```nf
+process TASK1 {
+    label 'long'
+
+    script:
+    """
+    first_command --here
+    """
+}
+```
+
+Config.
+
+```nf
+process {
+    executor = 'slurm'
+
+    withLabel: 'long' {
+        cpus = 8
+        memory = '32 GB'
+        queue = 'omega'
+        container = 'some/image:x'
+    }
+}
+
+docker.enabled = true
+```
+
 The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
 allows the definition of sub-workflow components that enclose the invocation of
 one or more processes and operators.
