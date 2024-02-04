@@ -3,3 +3,4 @@
 .nextflow/
 bin/
 work/
+*.sif

@@ -9,7 +9,9 @@
   - [Nextflow tutorial](#nextflow-tutorial)
     - [Processes, channels, and workflows](#processes-channels-and-workflows)
     - [First script](#first-script)
-  - [Sarek](#sarek)
+  - [nf-core](#nf-core)
+    - [Sarek](#sarek)
+  - [Quick reference](#quick-reference)
 
 # README
 
@@ -503,7 +505,12 @@ nextflow run script/wc.nf
 # ref1_1.fq.gz 58708
 ```
 
-## Sarek
+## nf-core
+
+A [community effort](https://nf-co.re/) to collect a curated set of analysis
+pipelines built using Nextflow.
+
+### Sarek
 
 [nf-core/sarek](https://nf-co.re/sarek) is a Nextflow workflow for calling
 variants on whole genome, exome, or targeted sequencing data. Following the
@@ -534,3 +541,30 @@ nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GA
 ```
 
 See the [usage page](https://nf-co.re/sarek/usage) for more information.
+
+## Quick reference
+
+[Run with Singularity](https://www.nextflow.io/docs/latest/singularity.html).
+
+    nextflow run <your script> -with-singularity [singularity image file]
+
+```console
+singularity pull docker://debian:12.4
+nextflow run snippets/os.nf -with-singularity debian_12.4.sif
+```
+```
+N E X T F L O W  ~  version 23.10.1
+Launching `snippets/os.nf` [soggy_church] DSL2 - revision: 9c2a106435
+executor >  local (1)
+[26/92c571] process > GETOS [100%] 1 of 1 ?
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+```
+
