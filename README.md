@@ -12,6 +12,7 @@
   - [nf-core](#nf-core)
     - [Sarek](#sarek)
   - [Quick reference](#quick-reference)
+    - [Read samplesheet](#read-samplesheet)
     - [Singularity](#singularity)
 
 # README
@@ -546,6 +547,31 @@ See the [usage page](https://nf-co.re/sarek/usage) for more information.
 ## Quick reference
 
 Notes for common tasks that I regularly forget!
+
+### Read samplesheet
+
+Use the [splitCsv](https://www.nextflow.io/docs/latest/operator.html#splitcsv)
+operator.
+
+```nf
+Channel
+    .fromPath("$HOME/github/learning_nextflow/basic/samplesheet.csv")
+    .splitCsv(header: ['sample_name', 'first', 'second'])
+    // row is a list object
+    .view { row -> "${row.first} ${row.second}" }
+```
+
+Run.
+
+```console
+nextflow run basic/script/split_csv.nf
+```
+```
+N E X T F L O W  ~  version 23.10.1
+Launching `basic/script/split_csv.nf` [cranky_boltzmann] DSL2 - revision: 54308421ee
+normal_1.fq.gz normal_2.fq.gz
+tumour_1.fq.gz tumour_2.fq.gz
+```
 
 ### Singularity
 
