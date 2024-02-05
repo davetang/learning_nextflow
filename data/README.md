@@ -19,3 +19,9 @@ Data will be downloaded as `data.tar.gz`.
 wget --content-disposition https://ndownloader.figshare.com/files/28531743
 tar -xzf data.tar.gz
 ```
+
+Numbers file.
+
+```console
+for i in {1..20}; do echo ${i}; done | shuf --random-source=<(yes 1984) > num.txt
+```
