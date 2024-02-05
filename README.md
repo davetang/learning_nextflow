@@ -12,6 +12,7 @@
   - [nf-core](#nf-core)
     - [Sarek](#sarek)
   - [Quick reference](#quick-reference)
+    - [Input parameters](#input-parameters)
     - [Read samplesheet](#read-samplesheet)
     - [Singularity](#singularity)
 
@@ -547,6 +548,22 @@ See the [usage page](https://nf-co.re/sarek/usage) for more information.
 ## Quick reference
 
 Notes for common tasks that I regularly forget!
+
+### Input parameters
+
+Store parameters in JSON or YAML and reference with `params` prefix in Nextflow
+script.
+
+```console
+nextflow run -params-file params.yml snippets/params.nf
+```
+```
+N E X T F L O W  ~  version 23.10.1
+Launching `snippets/params.nf` [admiring_newton] DSL2 - revision: 96ae723ae2
+executor >  local (1)
+[a4/e89bf9] process > HELLO (1) [100%] 1 of 1 ?
+Hello, how are you?
+```
 
 ### Read samplesheet
 
