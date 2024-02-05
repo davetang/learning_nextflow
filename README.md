@@ -12,6 +12,7 @@
   - [nf-core](#nf-core)
     - [Sarek](#sarek)
   - [Quick reference](#quick-reference)
+    - [Singularity](#singularity)
 
 # README
 
@@ -323,7 +324,7 @@ nextflow info nextflow-io/rnaseq-nf
  main script : main.nf
  description : Proof of concept of a RNA-seq pipeline implemented with Nextflow
  author      : Paolo Di Tommaso
- revisions   : 
+ revisions   :
  * master (default)
    dev
    dsl2
@@ -384,7 +385,7 @@ curl -s https://get.nextflow.io | bash
 #       created 01-04-2023 21:09 UTC (02-04-2023 06:09 JDT)
 #       cite doi:10.1038/nbt.3820
 #       http://nextflow.io
-# 
+#
 # Nextflow installation completed. Please note:
 # - the executable file `nextflow` has been created in the folder: /home/dtang/github/learning_nextflow
 # - you may complete the installation by moving it to a directory in your $PATH
@@ -403,11 +404,11 @@ nextflow run hello
 # executor >  local (4)
 # [ae/272202] process > sayHello (4) [100%] 4 of 4 ✔
 # Bonjour world!
-# 
+#
 # Ciao world!
-# 
+#
 # Hello world!
-# 
+#
 # Hola world!
 ```
 
@@ -544,12 +545,17 @@ See the [usage page](https://nf-co.re/sarek/usage) for more information.
 
 ## Quick reference
 
+Notes for common tasks that I regularly forget!
+
+### Singularity
+
 [Run with Singularity](https://www.nextflow.io/docs/latest/singularity.html).
 
     nextflow run <your script> -with-singularity [singularity image file]
 
 ```console
 singularity pull docker://debian:12.4
+singularity pull docker://debian:11.8
 nextflow run snippets/os.nf -with-singularity debian_12.4.sif
 ```
 ```
@@ -568,3 +574,55 @@ SUPPORT_URL="https://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
 ```
 
+Define in the Nextflow configuration file `nextflow.config`:
+
+    process.container = '/path/to/singularity.img'
+    singularity.enabled = true
+
+Define multiple containers in `nextflow_os.config`.
+
+```nf
+process {
+    withName:GETOS {
+        container = "$HOME/github/learning_nextflow/debian_12.4.sif"
+    }
+    withName:GETOS2 {
+        container = "$HOME/github/learning_nextflow/debian_11.8.sif"
+    }
+}
+singularity {
+    enabled = true
+}
+```
+
+Run.
+
+```console
+nextflow run snippets/os_wf.nf -c nextflow_os.config
+```
+```
+N E X T F L O W  ~  version 23.10.1
+Launching `snippets/os_wf.nf` [condescending_pare] DSL2 - revision: 889a3d08d5
+executor >  local (2)
+[3f/59102d] process > GETOS  [100%] 1 of 1 ?
+[43/9f2de0] process > GETOS2 [100%] 1 of 1 ?
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+```
