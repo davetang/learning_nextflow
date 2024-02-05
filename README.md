@@ -23,6 +23,68 @@ scientific workflows using software containers.
 
 ## TL;DR
 
+A simple workflow that sorts a file numerically and outputs the beginning of
+the sorted list.
+
+```nf
+#!/usr/bin/env nextflow
+
+infile = "$HOME/github/learning_nextflow/data/num.txt"
+topn = 10
+
+process SORT {
+    input:
+    path x
+
+    output:
+    path "${x.baseName}_sorted.txt"
+
+    script:
+    """
+    sort -n $x > ${x.baseName}_sorted.txt
+    """
+}
+
+process TOPN {
+    input:
+    path x
+    val n
+
+    output:
+    stdout
+
+    script:
+    """
+    head -$n $x
+    """
+}
+
+workflow {
+    sort_ch = SORT(infile)
+    topn_ch = TOPN(sort_ch, topn).view { it }
+}
+```
+```console
+nextflow run snippets/simple.nf
+```
+```
+N E X T F L O W  ~  version 23.10.1
+Launching `snippets/simple.nf` [compassionate_baekeland] DSL2 - revision: 9f2812f5c5
+executor >  local (2)
+[51/9c24ee] process > SORT [100%] 1 of 1 ?
+[10/f6db22] process > TOPN [100%] 1 of 1 ?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
 For those coming from WDL (like myself), here's a summary.
 
 A Nextflow workflow is made by joining together different
