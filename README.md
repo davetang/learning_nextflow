@@ -627,6 +627,42 @@ executor >  local (1)
 Hello, how are you?
 ```
 
+A parameter file has higher priority than a parameter set in the script.
+
+```console
+nextflow run script/nproc.nf
+```
+```
+snipped
+there are 4 processors available
+process ECHO is using 1 cpu/s
+Konnichiwa
+```
+
+Use parameter in `params.yml`.
+
+```console
+nextflow run -params-file params.yml script/nproc.nf
+```
+```
+snipped
+there are 4 processors available
+process ECHO is using 1 cpu/s
+Hello, how are you?
+```
+
+Use parameter and config file.
+
+```console
+nextflow run -params-file params.yml -c example.config script/nproc.nf
+```
+```
+snipped
+there are 4 processors available
+process ECHO is using 2 cpu/s
+Hello, how are you?
+```
+
 ### Read samplesheet
 
 Use the [splitCsv](https://www.nextflow.io/docs/latest/operator.html#splitcsv)
