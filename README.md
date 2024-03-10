@@ -10,6 +10,8 @@
     - [Processes, channels, and workflows](#processes-channels-and-workflows)
     - [First script](#first-script)
   - [nf-core](#nf-core)
+    - [tools](#tools)
+    - [Reference genomes](#reference-genomes)
     - [Sarek](#sarek)
   - [Quick reference](#quick-reference)
     - [Input parameters](#input-parameters)
@@ -600,6 +602,25 @@ Set the cache directory and download nf-core/sarek workflow.
 export NXF_SINGULARITY_CACHEDIR=/some/dir
 
 nf-core download sarek -r 3.4.0 --outdir nf-core-sarek --compress none --container-system singularity -p 4
+```
+
+### Reference genomes
+
+<https://nf-co.re/docs/usage/reference_genomes>
+
+> To make the use of reference genomes easier, Illumina has developed a centralised resource called iGenomes. The most commonly used reference genome files are organised in a consistent structure for multiple genomes.
+>
+> We have uploaded a copy of iGenomes onto AWS S3 and nf-core pipelines are configured to use this by default. AWS iGenomes is hosted by Amazon as part of the Registry of Open Data and are free to use.
+>
+> Downloading reference genome files takes time and bandwidth so, if possible, we recommend storing a local copy of your relevant iGenomes references which is outlined at https://ewels.github.io/AWS-iGenomes/.
+>
+> To use a local version of iGenomes, the variable params.igenomes_base must be set to the path of the local iGenomes folder to reflect what is defined in conf/igenomes.config.
+
+To download using AWSCLI, for example:
+
+```console
+mkdir -p ./references/Homo_sapiens/GATK/GRCh38/
+aws s3 --no-sign-request --region eu-west-1 sync s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh38/ ./references/Homo_sapiens/GATK/GRCh38/
 ```
 
 ### Sarek
