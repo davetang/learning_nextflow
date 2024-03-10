@@ -575,6 +575,33 @@ nextflow run script/wc.nf
 A [community effort](https://nf-co.re/) to collect a curated set of analysis
 pipelines built using Nextflow.
 
+### tools
+
+The nf-core companion [tool](https://nf-co.re/tools) can be used to help with
+common tasks.
+
+```console
+mamba create --name nf-core python=3.11 nf-core nextflow
+```
+
+List workflows.
+
+```console
+nf-core list | less
+```
+
+Set [$NXF_SINGULARITY_CACHEDIR](https://nf-co.re/tools#singularity-cache-directory):
+
+>If found, the tool will fetch the Singularity images to this directory first before copying to the target output archive / directory. Any images previously fetched will be found there and copied directly - this includes images that may be shared with other pipelines or previous pipeline version downloads or download attempts.
+
+Set the cache directory and download nf-core/sarek workflow.
+
+```console
+export NXF_SINGULARITY_CACHEDIR=/some/dir
+
+nf-core download sarek -r 3.4.0 --outdir nf-core-sarek --compress none --container-system singularity -p 4
+```
+
 ### Sarek
 
 [nf-core/sarek](https://nf-co.re/sarek) is a Nextflow workflow for calling
