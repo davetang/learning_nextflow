@@ -623,6 +623,39 @@ mkdir -p ./references/Homo_sapiens/GATK/GRCh38/
 aws s3 --no-sign-request --region eu-west-1 sync s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh38/ ./references/Homo_sapiens/GATK/GRCh38/
 ```
 
+The config file `conf/igenomes.config` looks like this:
+
+```
+'GATK.GRCh38' {
+            ascat_alleles           = "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Annotation/ASCAT/G1000_alleles_hg38.zip"
+            ascat_genome            = 'hg38'
+            ascat_loci              = "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Annotation/ASCAT/G1000_loci_hg38.zip"
+            ascat_loci_gc           = "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Annotation/ASCAT/GC_G1000_hg38.zip"
+            ascat_loci_rt           = "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Annotation/ASCAT/RT_G1000_hg38.zip"
+            bwa                     = "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/BWAIndex/"
+```
+
+> The iGenomes config file uses params.igenomes_base to make it possible to use a local copy of iGenomes. However, as custom config files are loaded after nextflow.config and the igenomes.config has already been imported and parsed, setting params.igenomes_base in a custom config file has no effect and the pipeline will use the s3 locations by default. To overcome this you can specify a local iGenomes path by either:
+
+Specifying an `--igenomes_base` path in your execution command.
+
+```console
+nextflow run nf-core/<pipeline> --input <input> -c <config> -profile <profile> --igenomes_base <path>/<to>/<data>/igenomes
+```
+
+Specifying the igenomes_base parameter in a parameters file provided with `-params-file` in YAML or JSON format.
+
+```console
+nextflow run nf-core/<pipeline> -profile <profile> -params-file params.yml
+```
+
+Where the `params.yml` file contains the pipeline params:
+
+```
+input: '/<path>/<to>/<data>/input'
+igenomes_base: '/<path>/<to>/<data>/igenomes'
+```
+
 ### Sarek
 
 [nf-core/sarek](https://nf-co.re/sarek) is a Nextflow workflow for calling
