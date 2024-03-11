@@ -659,34 +659,21 @@ igenomes_base: '/<path>/<to>/<data>/igenomes'
 ### Sarek
 
 [nf-core/sarek](https://nf-co.re/sarek) is a Nextflow workflow for calling
-variants on whole genome, exome, or targeted sequencing data. Following the
-[Quick Start](https://nf-co.re/sarek#quick-start) guide:
+variants on whole genome, exome, or targeted sequencing data.
 
-1. [Install using Mamba](#installation).
-2. Docker installed.
-3. Download and test pipeline:
+In the directory where we [downloaded Sarek](#tools), run the following; set `NXF_SINGULARITY_CACHEDIR` (where Singularity images are downloaded) and `IGENOMES_BASE` (where the reference files were downloaded) accordingly.
 
 ```console
-time nextflow run nf-core/sarek -profile test,docker --outdir sarek_test
+export NXF_SINGULARITY_CACHEDIR=/dir/to/images
+IGENOMES_BASE=/data/references
+nextflow run main.nf -profile test,singularity --outdir test_out --igenomes_base ${IGENOMES_BASE}
+
 # snipped
 # -[nf-core/sarek] Pipeline completed successfully-
-# Completed at: 14-Apr-2023 09:48:56
-# Duration    : 9m 18s
-# CPU hours   : 0.1
-# Succeeded   : 26
-#
-# real    9m37.830s
-# user    1m51.006s
-# sys     0m14.591s
+# snipped
 ```
 
-4. Run your own analysis
-
-```console
-nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
-```
-
-See the [usage page](https://nf-co.re/sarek/usage) for more information.
+See the [usage page](https://nf-co.re/sarek/usage) for more information. I have a full example in another [repo](https://github.com/davetang/vcf_example).
 
 ## Quick reference
 
