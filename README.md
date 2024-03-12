@@ -788,7 +788,7 @@ Define in the Nextflow configuration file `nextflow.config`:
     process.container = '/path/to/singularity.img'
     singularity.enabled = true
 
-Define multiple containers in `nextflow_os.config`.
+Define multiple containers in `nextflow_os.config`. Note that the executor is set to `sge` (Sun Grid Engine or equivalent); change this to `local` and remove the `clusterOptions` line if you do not have a grid engine queuing system. (The cluster option explicitly states the use of `/bin/bash`; my queue has been set to use `/bin/sh`, which I can change using `qconf -mq`, but perhaps it is better use the cluster option since not everyone has permission to modify the queue settings.)
 
 ```nf
 process {
@@ -798,6 +798,9 @@ process {
     withName:GETOS2 {
         container = "$HOME/github/learning_nextflow/debian_11.8.sif"
     }
+
+    executor = 'sge'
+    clusterOptions = '-S /bin/bash'
 }
 singularity {
     enabled = true
@@ -811,25 +814,25 @@ nextflow run snippets/os_wf.nf -c nextflow_os.config
 ```
 ```
 N E X T F L O W  ~  version 23.10.1
-Launching `snippets/os_wf.nf` [condescending_pare] DSL2 - revision: 889a3d08d5
-executor >  local (2)
-[3f/59102d] process > GETOS  [100%] 1 of 1 ?
-[43/9f2de0] process > GETOS2 [100%] 1 of 1 ?
-PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
-NAME="Debian GNU/Linux"
-VERSION_ID="11"
-VERSION="11 (bullseye)"
-VERSION_CODENAME=bullseye
-ID=debian
-HOME_URL="https://www.debian.org/"
-SUPPORT_URL="https://www.debian.org/support"
-BUG_REPORT_URL="https://bugs.debian.org/"
-
+Launching `snippets/os_wf.nf` [fervent_babbage] DSL2 - revision: 889a3d08d5
+executor >  sge (2)
+[c7/9d8d9c] process > GETOS  [100%] 1 of 1
+[7e/ce8b28] process > GETOS2 [100%] 1 of 1
 PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
 NAME="Debian GNU/Linux"
 VERSION_ID="12"
 VERSION="12 (bookworm)"
 VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
 ID=debian
 HOME_URL="https://www.debian.org/"
 SUPPORT_URL="https://www.debian.org/support"
