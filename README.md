@@ -14,6 +14,7 @@
     - [Reference genomes](#reference-genomes)
     - [Sarek](#sarek)
   - [Quick reference](#quick-reference)
+    - [Workflow execution](#workflow-execution)
     - [Input parameters](#input-parameters)
     - [Read samplesheet](#read-samplesheet)
     - [Singularity](#singularity)
@@ -678,6 +679,21 @@ See the [usage page](https://nf-co.re/sarek/usage) for more information. I have 
 ## Quick reference
 
 Notes for common tasks that I regularly forget!
+
+### Workflow execution
+
+Useful parameters to include when running a workflow.
+
+```console
+nextflow run \
+   -resume \                               # caching results
+   -with-report execution_report.html \    # provenance
+   -with-trace \                           # resource usage
+   -with-dag flowchart.html \              # Mermaid workflow graph
+   -params-file params.yml \               # input parameters
+   -c nextflow.config \                    # execution settings
+   script.nf                               # Nextflow script
+```
 
 ### Input parameters
 
