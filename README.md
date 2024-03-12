@@ -605,6 +605,87 @@ export NXF_SINGULARITY_CACHEDIR=/some/dir
 nf-core download sarek -r 3.4.0 --outdir nf-core-sarek --compress none --container-system singularity -p 4
 ```
 
+The `create` subcommand makes a new pipeline using the nf-core base template. With a given pipeline name, description and author, it makes a starter pipeline which follows nf-core best practices.
+
+After creating the files, the command initialises the folder as a git repository and makes an initial commit. This first "vanilla" commit which is identical to the output from the templating tool is important, as it allows us to keep your pipeline in sync with the base template in the future.
+
+The workflow name needs to be lowercase without punctuation. The `--plain` option will run the pipeline creation process silently with the nf-core template.
+
+```console
+nf-core create -n xyzseq -d "This pipeline analyses data generated from method xyz" -a "Dave Tang" --plain
+```
+```
+INFO     Creating new nf-core pipeline: 'nf-core/xyzseq'
+INFO     Initialising pipeline git repository
+INFO     Done. Remember to add a remote and push to GitHub:
+          cd /home/dtang/tmp/nf-core-xyzseq
+          git remote add origin git@github.com:USERNAME/REPO_NAME.git
+          git push --all origin
+INFO     This will also push your newly created dev branch and the TEMPLATE branch for syncing.
+INFO     !!!!!! IMPORTANT !!!!!!
+
+         If you are interested in adding your pipeline to the nf-core community,
+         PLEASE COME AND TALK TO US IN THE NF-CORE SLACK BEFORE WRITING ANY CODE!
+
+         Please read: https://nf-co.re/developers/adding_pipelines#join-the-community
+```
+
+Template structure.
+
+```console
+tree --charset ascii -L 1 nf-core-xyzseq/
+```
+```
+nf-core-xyzseq/
+|-- assets
+|-- CHANGELOG.md
+|-- CITATIONS.md
+|-- CODE_OF_CONDUCT.md
+|-- conf
+|-- docs
+|-- LICENSE
+|-- main.nf
+|-- modules
+|-- modules.json
+|-- nextflow.config
+|-- nextflow_schema.json
+|-- pyproject.toml
+|-- README.md
+|-- subworkflows
+|-- tower.yml
+`-- workflows
+
+7 directories, 11 files
+```
+
+The nf-core `create` command comes with a number of options that allow you to customise the creation of a pipeline if you intend to not publish it as an nf-core pipeline. This can be done in two ways:
+
+1. By using interactive prompts, or
+2. By supplying a template.yml file using the `--template-yaml` <file> option.
+
+Both options allow you to specify a custom pipeline prefix to use instead of the common nf-core, as well as selecting parts of the template to be excluded during pipeline creation. The interactive prompts will guide you through the pipeline creation process. An example of a template.yml file is shown below.
+
+```yaml
+name: coolpipe
+description: A cool pipeline
+author: me
+prefix: myorg
+skip:
+  - github
+  - ci
+  - github_badges
+  - igenomes
+  - nf_core_configs
+```
+
+This will create a pipeline called coolpipe in the directory myorg-coolpipe (<prefix>-<name>) with me as the author. It will exclude all possible parts of the template:
+
+* github: removed all files required for GitHub hosting of the pipeline. Specifically, the .github folder and .gitignore file.
+* ci: removes the GitHub continuous integration tests from the pipeline. Specifically, the .github/workflows/ folder.
+* github_badges: removes GitHub badges from the README.md file.
+* igenomes: removes pipeline options related to iGenomes. Including the conf/igenomes.config file and all references to it.
+* nf_core_configs: excludes nf_core/configs repository options, which make multiple config profiles for various institutional clusters available.
+
 ### Reference genomes
 
 <https://nf-co.re/docs/usage/reference_genomes>
