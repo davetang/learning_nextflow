@@ -18,6 +18,7 @@
     - [Input parameters](#input-parameters)
     - [Read samplesheet](#read-samplesheet)
     - [Singularity](#singularity)
+  - [Troubleshooting](#troubleshooting)
 
 # README
 
@@ -934,4 +935,33 @@ ID=debian
 HOME_URL="https://www.debian.org/"
 SUPPORT_URL="https://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
+```
+
+## Troubleshooting
+
+When using `sge`:
+
+```
+Command output:
+  Unable to run job: "job" denied: use parallel environments instead of requesting slots explicitly
+  Exiting.
+```
+
+This is because the queue uses the following parallel settings.
+
+```console
+qconf -sq all.q | grep pe_list
+```
+```
+pe_list               make smp mpi
+```
+
+In `nextflow.config` use the following:
+
+```
+process {
+    executor = 'sge'
+    penv = 'smp'
+    clusterOptions = '-S /bin/bash'
+}
 ```
