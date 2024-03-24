@@ -585,7 +585,7 @@ The nf-core companion [tool](https://nf-co.re/tools) can be used to help with
 common tasks.
 
 ```console
-mamba create --name nf-core python=3.11 nf-core nextflow
+mamba create --name nf-core -c bioconda python=3.11 nf-core nextflow
 ```
 
 List workflows.
