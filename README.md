@@ -17,6 +17,7 @@
     - [Workflow execution](#workflow-execution)
     - [Input parameters](#input-parameters)
     - [Read samplesheet](#read-samplesheet)
+    - [Resource allocation](#resource-allocation)
     - [Singularity](#singularity)
   - [Troubleshooting](#troubleshooting)
 
@@ -853,6 +854,10 @@ Launching `basic/script/split_csv.nf` [cranky_boltzmann] DSL2 - revision: 543084
 normal_1.fq.gz normal_2.fq.gz
 tumour_1.fq.gz tumour_2.fq.gz
 ```
+
+### Resource allocation
+
+A pipeline may fail due to a particular step of the pipeline requesting more resources than you have on your system. To avoid these failures, all nf-core pipelines check pipeline-step resource requests against [parameters](https://nf-co.re/docs/usage/configuration#max-resources) called `--max_cpus`, `--max_memory` and `--max_time`. These should represent the maximum possible resources of a machine or node.
 
 ### Singularity
 
