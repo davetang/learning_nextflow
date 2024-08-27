@@ -780,8 +780,17 @@ nextflow run \
 
 ### Input parameters
 
-Store parameters in JSON or YAML and reference with `params` prefix in Nextflow
-script.
+[When](https://www.nextflow.io/docs/latest/config.html) a pipeline script is launched, Nextflow looks for configuration files in multiple locations. Since each configuration file may contain conflicting settings, they are applied in the following order (from lowest to highest priority):
+
+1. (lowest priority) Parameters defined in pipeline scripts (e.g. `main.nf`)
+2. The config file `$HOME/.nextflow/config`
+3. The config file `nextflow.config` in the project directory
+4. The config file `nextflow.config` in the launch directory
+5. Config file specified using the `-c <config-file>` option
+6. Parameters specified in a params file (`-params-file` option)
+7. (highest priority) Parameters specified on the command line (`--something` value)
+
+Store parameters in JSON or YAML and reference with `params` prefix in Nextflow script.
 
 ```console
 nextflow run -params-file params.yml snippets/params.nf
@@ -828,6 +837,18 @@ snipped
 there are 4 processors available
 process ECHO is using 2 cpu/s
 Hello, how are you?
+```
+
+Pass parameter from the command line, which has the highest priority.
+
+```console
+nextflow run -params-file params.yml -c example.config --greeting "Highest priority" script/nproc.nf
+```
+```
+snipped
+there are 6 processors available
+process ECHO is using 2 cpu/s
+Highest priority
 ```
 
 ### Read samplesheet
