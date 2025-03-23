@@ -991,3 +991,5 @@ process {
     clusterOptions = '-S /bin/bash'
 }
 ```
+
+The demo in <https://github.com/davetang/learning_nextflow/tree/main/cpus> shows that using `-process.cpus=4` does not work when a process has a label that corresponds to a setting in a config file. This was suspected when I was trying to [set up](https://github.com/davetang/immune_repertoire?tab=readme-ov-file#troubleshooting) `nf-core/airrflow` and confirmed with the demo.
