@@ -23,8 +23,7 @@
 
 # README
 
-[Nextflow](https://www.nextflow.io/) enables scalable and reproducible
-scientific workflows using software containers.
+[Nextflow](https://www.nextflow.io/) enables scalable and reproducible scientific workflows using software containers. To learn more about Nextflow check out the [Nextflow community training portal](https://training.nextflow.io/latest/).
 
 ## TL;DR
 
