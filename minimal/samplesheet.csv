@@ -1,0 +1,7 @@
+sample_id,sample_name,condition,fastq1,fastq2
+0001,sample_one,normal,sample_one_1.fastq.gz,sample_one_2.fastq.gz
+0002,sample_two,normal,sample_two_1.fastq.gz,sample_two_2.fastq.gz
+0003,sample_three,normal,sample_three_1.fastq.gz,sample_three_2.fastq.gz
+0004,sample_four,tumour,sample_four_1.fastq.gz,sample_four_2.fastq.gz
+0005,sample_five,tumour,sample_five_1.fastq.gz,sample_five_2.fastq.gz
+0006,sample_six,tumour,sample_six_1.fastq.gz,sample_six_2.fastq.gz
