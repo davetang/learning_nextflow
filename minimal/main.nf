@@ -3,36 +3,25 @@
 
 Minimal working example that uses a simple CSV samplesheet
 
+Some notes:
+
+Nextflow scripts have different sections with specific rules:
+
+    Top-level (script declarations): For imports, parameter definitions, and function definitions, like ingredients
+    Inside workflows: For actual data processing logic, like the recipe
+    Inside processes: For computational steps, like the cooking workflow
+
+This relates to the warning:
+
+     Statements cannot be mixed with script declarations -- move statements into a process or workflow
+
+The channel creation step needs to be inside a workflow block
+
 */
 
 nextflow.enable.dsl=2
 
 params.outdir = 'results'
-
-// https://www.nextflow.io/docs/latest/reference/operator.html#splitcsv
-ch_samplesheet = Channel.fromPath("samplesheet.csv") // creates a channel and stores it a variable
-    .splitCsv(header: true) // take result previous line and split the CSV
-    .map { row -> // { starts a closure, a block of code that can be treated as a value
-        // Validate required fields
-        if (!row.sample_id || !row.fastq1 || !row.fastq2) {
-            error "Missing required fields in samplesheet row: ${row}"
-        }
-
-        // create new variable called meta that is a map, i.e., dictionary
-        // [key: value, key: value]
-        def meta = [
-            id: row.sample_id,
-            sample_name: row.sample_name ?: row.sample_id, // use sample_name if it exists, if not, use sample_id
-            condition: row.condition ?: 'unknown'
-        ]
-
-        // create new variable called reads that is a list with two items
-        // [item1, item2]
-        def reads = [file(row.fastq1, checkIfExists: true), // file object and check if it exists
-                     file(row.fastq2, checkIfExists: true)]
-        // return [metadata_map, [file1, file2]]
-        return [meta, reads]
-    }
 
 // Define a computational step in your workflow using the `process` keyword
 // The name of the process is by convention in ALL_CAPS
@@ -60,5 +49,30 @@ process EXAMPLE_PROCESS {
 }
 
 workflow {
+    // https://www.nextflow.io/docs/latest/reference/operator.html#splitcsv
+    ch_samplesheet = Channel.fromPath("samplesheet.csv") // creates a channel and stores it a variable
+        .splitCsv(header: true) // take result previous line and split the CSV
+        .map { row -> // { starts a closure, a block of code that can be treated as a value
+            // Validate required fields
+            if (!row.sample_id || !row.fastq1 || !row.fastq2) {
+                error "Missing required fields in samplesheet row: ${row}"
+            }
+
+            // create new variable called meta that is a map, i.e., dictionary
+            // [key: value, key: value]
+            def meta = [
+                id: row.sample_id,
+                sample_name: row.sample_name ?: row.sample_id, // use sample_name if it exists, if not, use sample_id
+                condition: row.condition ?: 'unknown'
+            ]
+
+            // create new variable called reads that is a list with two items
+            // [item1, item2]
+            def reads = [file(row.fastq1, checkIfExists: true), // file object and check if it exists
+                         file(row.fastq2, checkIfExists: true)]
+            // return [metadata_map, [file1, file2]]
+            return [meta, reads]
+        }
+
     example_process_ch = EXAMPLE_PROCESS(ch_samplesheet)
 }
