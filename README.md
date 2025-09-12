@@ -1,6 +1,5 @@
 ## Table of Contents
 
-- [README](#readme)
   - [TL;DR](#tldr)
   - [Installation](#installation)
   - [Quick demo](#quick-demo)
@@ -21,7 +20,6 @@
     - [Singularity](#singularity)
   - [Troubleshooting](#troubleshooting)
 
-# README
 
 [Nextflow](https://www.nextflow.io/) enables scalable and reproducible scientific workflows using software containers. To learn more about Nextflow check out the [Nextflow community training portal](https://training.nextflow.io/latest/).
 
