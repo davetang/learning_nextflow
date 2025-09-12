@@ -11,23 +11,37 @@ params.outdir = 'results'
 
 // https://www.nextflow.io/docs/latest/reference/operator.html#splitcsv
 ch_samplesheet = Channel.fromPath("samplesheet.csv")
-                    .splitCsv(header: true)
-                    .map { row -> tuple(row.sample_id, row.sample_name, row.condition) }
+    .splitCsv(header: true)
+    .map { row ->
+        // Validate required fields
+        if (!row.sample_id || !row.fastq1 || !row.fastq2) {
+            error "Missing required fields in samplesheet row: ${row}"
+        }
 
-process TEST {
+        def meta = [
+            id: row.sample_id,
+            sample_name: row.sample_name ?: row.sample_id,
+            condition: row.condition ?: 'unknown'
+        ]
+        def reads = [file(row.fastq1, checkIfExists: true),
+                     file(row.fastq2, checkIfExists: true)]
+        return [meta, reads]
+    }
+
+process EXAMPLE_PROCESS {
     publishDir params.outdir, mode: 'copy'
     input:
-    tuple val(sample_id), val(sample_name), val(condition)
+    tuple val(meta), path(reads)
 
     output:
-    path "${sample_name}.txt"
+    tuple val(meta), path("${meta.id}_output.txt")
 
     script:
     """
-    echo "${sample_id} ${condition}" > ${sample_name}.txt
+    echo "Processing ${meta.id} from condition ${meta.condition}" > ${meta.id}_output.txt
     """
 }
 
 workflow {
-    test_ch = TEST(ch_samplesheet)
+    example_process_ch = EXAMPLE_PROCESS(ch_samplesheet)
 }
