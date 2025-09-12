@@ -25,7 +25,7 @@
 
 [Nextflow](https://www.nextflow.io/) enables scalable and reproducible scientific workflows using software containers. To learn more about Nextflow check out the [Nextflow community training portal](https://training.nextflow.io/latest/).
 
-A simple workflow that sorts a file numerically and outputs the beginning of the sorted list.
+A simple workflow (`simple/main.nf`) that sorts a file numerically and outputs the beginning of the sorted list.
 
 ```nf
 #!/usr/bin/env nextflow
@@ -66,14 +66,19 @@ workflow {
 }
 ```
 ```console
-nextflow run snippets/simple.nf
+nextflow run simple/main.nf
 ```
 ```
-N E X T F L O W  ~  version 23.10.1
-Launching `snippets/simple.nf` [compassionate_baekeland] DSL2 - revision: 9f2812f5c5
+ N E X T F L O W   ~  version 25.04.7
+
+Launching `simple/main.nf` [magical_lovelace] DSL2 - revision: 9f2812f5c5
+
+[-        ] SORT | 0 of 1
+[-        ] TOPN -
+
 executor >  local (2)
-[51/9c24ee] process > SORT [100%] 1 of 1 ?
-[10/f6db22] process > TOPN [100%] 1 of 1 ?
+[70/5a04e0] SORT | 1 of 1 ✔
+[3d/eed7ce] TOPN | 1 of 1 ✔
 1
 2
 3
