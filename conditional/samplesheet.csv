@@ -1,0 +1,5 @@
+sample_id,sample_name,condition,data_type,input_file
+sample1,Sample_1,control,raw,sample1_R1.fastq.gz
+sample2,Sample_2,treatment,raw,sample2_R1.fastq.gz
+sample3,Sample_3,control,processed,sample3.processed.bam
+sample4,Sample_4,treatment,processed,sample4.processed.bam
