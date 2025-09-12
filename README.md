@@ -23,7 +23,7 @@
 
 ## TL;DR
 
--[Nextflow](https://www.nextflow.io/) enables scalable and reproducible scientific workflows using software containers. To learn more about Nextflow check out the [Nextflow community training portal](https://training.nextflow.io/latest/).
+[Nextflow](https://www.nextflow.io/) enables scalable and reproducible scientific workflows using software containers. To learn more about Nextflow check out the [Nextflow community training portal](https://training.nextflow.io/latest/).
 
 A simple workflow that sorts a file numerically and outputs the beginning of the sorted list.
 
@@ -88,8 +88,7 @@ executor >  local (2)
 
 For those coming from WDL (like myself), here's a summary.
 
-A Nextflow workflow is made by joining together different
-[processes](https://www.nextflow.io/docs/latest/process.html) (WDL tasks).
+A Nextflow workflow is made by joining together different [processes](https://www.nextflow.io/docs/latest/process.html) (WDL tasks).
 
 ```nf
 process < name > {
@@ -121,7 +120,7 @@ The [process](https://training.nextflow.io/basic_training/processes/) body can c
 
 Directives are like the `runtime` options in WDL but are declared inside the process.
 
-In WDL
+In WDL:
 
 ```wdl
 runtime {
@@ -129,7 +128,7 @@ runtime {
 }
 ```
 
-In Nextflow.
+In Nextflow:
 
 ```nf
 process FOO {
@@ -144,8 +143,7 @@ process FOO {
 }
 ```
 
-To set the resource usage for all processes in the workflow script use the code
-below in a config file.
+To set the resource usage for all processes in the workflow script use the code below in a config file.
 
 ```nf
 process {
@@ -155,9 +153,7 @@ process {
 }
 ```
 
-Use a [process
-selector](https://www.nextflow.io/docs/latest/config.html#process-selectors) to
-apply configurations to specific processes or group of processes.
+Use a [process selector](https://www.nextflow.io/docs/latest/config.html#process-selectors) to apply configurations to specific processes or group of processes.
 
 [Configure process by name](https://training.nextflow.io/basic_training/executors/#configure-process-by-name).
 
@@ -207,9 +203,7 @@ process {
 docker.enabled = true
 ```
 
-The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword
-allows the definition of sub-workflow components that enclose the invocation of
-one or more processes and operators.
+The [workflow](https://www.nextflow.io/docs/latest/dsl2.html#workflow) keyword allows the definition of sub-workflow components that enclose the invocation of one or more processes and operators.
 
 ```nf
 workflow my_pipeline {
@@ -220,12 +214,9 @@ workflow my_pipeline {
 }
 ```
 
-Processes are executed independently and are isolated from each other; they
-communicate with each other through `channels`. Any `process` can define one or
-more `channels` as an `input` and `output`.
+Processes are executed independently and are isolated from each other; they communicate with each other through `channels`. Any `process` can define one or more `channels` as an `input` and `output`.
 
-Output of a process is accessed using the `out` channel, instead of using the
-defined output in WDL.
+Output of a process is accessed using the `out` channel, instead of using the defined output in WDL.
 
 ```nf
 workflow {
@@ -235,9 +226,7 @@ workflow {
 }
 ```
 
-However, the process output definition allows the use of the `emit` statement
-to define a named identifier that can be used to reference the channel in the
-external scope (but `out` still needs to be used as the prefix).
+However, the process output definition allows the use of the `emit` statement to define a named identifier that can be used to reference the channel in the external scope (but `out` still needs to be used as the prefix).
 
 ```nf
 process CONVERTTOUPPER {
@@ -261,32 +250,21 @@ workflow {
 }
 ```
 
-Pipeline results are also stored in directories with random names (hashes) but
-process results are not named by the process name (WDL task outputs are stored
-in directories named with `call-task_name`). `STDOUT` and `STDERR` are also
-saved but as hidden files in Nextflow.
+Pipeline results are also stored in directories with random names (hashes) but process results are not named by the process name (WDL task outputs are stored in directories named with `call-task_name`). `STDOUT` and `STDERR` are also saved but as hidden files in Nextflow.
 
-Use a YAML (JSON in WDL) file to specify parameters. Parameters used with
-`nextflow run` are referenced using `params.argv` in the Nextflow script.
+Use a YAML (JSON in WDL) file to specify parameters. Parameters used with `nextflow run` are referenced using `params.argv` in the Nextflow script.
 
 ```console
 nextflow run kallisto.nf -params-file kallisto.yaml --samples <input_file>
 ```
 
-Nextflow keeps track of all the processes executed in your workflow. If you
-modify some parts of your script, only the processes that are changed will be
-re-executed. No need to setup call caching like for WDL/Cromwell; just include
-a `cache` directive in the process to store the process results to a local
-cache and launch the pipeline with `-resume`.
+Nextflow keeps track of all the processes executed in your workflow. If you modify some parts of your script, only the processes that are changed will be re-executed. No need to setup call caching like for WDL/Cromwell; just include a `cache` directive in the process to store the process results to a local cache and launch the pipeline with `-resume`.
 
 ```console
 nextflow run hello.nf -resume
 ```
 
-Sub-workflows are [also supported in
-Nextflow](https://carpentries-incubator.github.io/workflows-nextflow/11-subworkflows/index.html);
-use `include` (`import` in WDL). Give a (sub-)workflow a name and then you can
-include it in another script.
+Sub-workflows are [also supported in Nextflow](https://carpentries-incubator.github.io/workflows-nextflow/11-subworkflows/index.html); use `include` (`import` in WDL). Give a (sub-)workflow a name and then you can include it in another script.
 
 ```nf
 # sub_wf.nf
@@ -304,14 +282,7 @@ workflow {
 }
 ```
 
-Use `-c my_config` to specify a [config
-file](https://www.nextflow.io/docs/latest/config.html) (`-o
-cromwell_options.txt` in Cromwell). As I understand from the [Nextflow
-configuration](https://training.nextflow.io/basic_training/config/) guide, the
-execution settings and workflow parameter settings can be stored into a single
-file. Though I think it's better separate the two; use the `-params-file`
-option to specify the file with the workflow parameters and `-c` to specify the
-file with the workflow execution parameters.
+Use `-c my_config` to specify a [config file](https://www.nextflow.io/docs/latest/config.html) (`-o cromwell_options.txt` in Cromwell). As I understand from the [Nextflow configuration](https://training.nextflow.io/basic_training/config/) guide, the execution settings and workflow parameter settings can be stored into a single file. Though I think it's better separate the two; use the `-params-file` option to specify the file with the workflow parameters and `-c` to specify the file with the workflow execution parameters.
 
 ## WDL versus Nextflow
 
